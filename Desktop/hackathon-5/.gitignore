@@ -1,0 +1,29 @@
+# Environment — API keys, secrets
+production/.env
+.env
+
+# Node
+node_modules/
+production/web-form/node_modules/
+production/web-form/.next/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+production/.venv313/
+production/venv/
+*.egg-info/
+
+# Pytest
+.pytest_cache/
+production/tests/__pycache__/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

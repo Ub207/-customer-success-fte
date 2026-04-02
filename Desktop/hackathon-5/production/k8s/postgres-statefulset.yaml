@@ -1,0 +1,101 @@
+---
+# PostgreSQL StatefulSet.
+# For production, prefer a managed service (AWS RDS, Cloud SQL, Azure DB).
+# This StatefulSet is provided for self-hosted / staging clusters.
+# Requires the pgvector extension — image: pgvector/pgvector:pg16.
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: fte-production
+  labels:
+    app: postgres
+spec:
+  clusterIP: None       # headless — required for StatefulSet DNS
+  selector:
+    app: postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: fte-production
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: pgvector/pgvector:pg16
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: fte_db
+            - name: POSTGRES_USER
+              value: fte_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fte-secrets
+                  key: DATABASE_PASSWORD
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: schema-init
+              mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "fte_user", "-d", "fte_db"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      volumes:
+        - name: schema-init
+          configMap:
+            name: postgres-schema
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+# Mount schema.sql as a ConfigMap so the DB is auto-initialized on first run.
+# Create with:  kubectl create configmap postgres-schema \
+#                 --from-file=schema.sql=./database/schema.sql \
+#                 -n fte-production
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-schema
+  namespace: fte-production
+data:
+  schema.sql: |
+    -- populated at deploy time via:
+    --   kubectl create configmap postgres-schema \
+    --     --from-file=schema.sql=./database/schema.sql \
+    --     -n fte-production --dry-run=client -o yaml | kubectl apply -f -

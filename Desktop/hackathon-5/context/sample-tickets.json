@@ -1,0 +1,92 @@
+[
+  {
+    "id": "T001",
+    "channel": "email",
+    "customer_email": "john.smith@company.com",
+    "subject": "Can't reset my password",
+    "message": "Hello, I've been trying to reset my password for the past hour but I'm not receiving the reset email. My account email is john.smith@company.com. This is urgent as I have a presentation in 2 hours.",
+    "priority": "high",
+    "category": "account"
+  },
+  {
+    "id": "T002",
+    "channel": "whatsapp",
+    "customer_phone": "+1234567890",
+    "message": "Hi how do I add team members?",
+    "priority": "medium",
+    "category": "general"
+  },
+  {
+    "id": "T003",
+    "channel": "web_form",
+    "customer_email": "sarah.jones@startup.io",
+    "customer_name": "Sarah Jones",
+    "subject": "API rate limit exceeded",
+    "message": "We're getting HTTP 429 errors on our API integration. We're on the Pro plan. Is there a way to get higher limits?",
+    "category": "technical",
+    "priority": "high"
+  },
+  {
+    "id": "T004",
+    "channel": "email",
+    "customer_email": "mike@enterprise.co",
+    "subject": "How much is the enterprise plan?",
+    "message": "We have 500 users and need enterprise features. Can you tell me the pricing for our scale?",
+    "priority": "medium",
+    "category": "billing"
+  },
+  {
+    "id": "T005",
+    "channel": "whatsapp",
+    "customer_phone": "+9876543210",
+    "message": "your app is broken!! tasks not syncing at all for 3 days now this is ridiculous",
+    "priority": "high",
+    "category": "bug"
+  },
+  {
+    "id": "T006",
+    "channel": "web_form",
+    "customer_email": "dev@techstartup.com",
+    "customer_name": "Alex Chen",
+    "subject": "Webhook integration help",
+    "message": "I'm trying to set up webhooks but I'm not sure which events to listen to for task completion. Can you help?",
+    "category": "technical",
+    "priority": "medium"
+  },
+  {
+    "id": "T007",
+    "channel": "email",
+    "customer_email": "lisa@business.com",
+    "subject": "I want a refund",
+    "message": "I signed up for the annual Pro plan but we decided not to use TechCorp. I'd like a full refund please.",
+    "priority": "high",
+    "category": "billing"
+  },
+  {
+    "id": "T008",
+    "channel": "whatsapp",
+    "customer_phone": "+1122334455",
+    "message": "Can I export all my tasks to Excel?",
+    "priority": "low",
+    "category": "general"
+  },
+  {
+    "id": "T009",
+    "channel": "email",
+    "customer_email": "pm@corp.io",
+    "subject": "How to set up recurring tasks?",
+    "message": "We want to set up weekly recurring tasks for our team's stand-up notes. How do we configure this?",
+    "priority": "low",
+    "category": "general"
+  },
+  {
+    "id": "T010",
+    "channel": "web_form",
+    "customer_email": "security@enterprise.com",
+    "customer_name": "James Wilson",
+    "subject": "Security compliance question",
+    "message": "We need to know if TechCorp is SOC 2 Type II compliant and GDPR compliant for our enterprise security review.",
+    "category": "general",
+    "priority": "high"
+  }
+]

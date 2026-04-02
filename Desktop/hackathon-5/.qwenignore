@@ -1,0 +1,12 @@
+# Ignore large/binary files to reduce memory usage
+**/*.pyc
+**/__pycache__/**
+**/*.pyc
+**/.pytest_cache/**
+**/node_modules/**
+**/*.log
+**/*.sqlite
+**/*.db
+**/dist/**
+**/build/**
+**/*.egg-info/**

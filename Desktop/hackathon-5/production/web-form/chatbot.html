@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechCorp Support Chat</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f2f5;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    /* ── Chat Window ── */
+    .chat-window {
+      width: 100%;
+      max-width: 420px;
+      height: 620px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .chat-header {
+      background: #4f46e5;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .avatar {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar svg { width: 20px; height: 20px; }
+    .header-info { flex: 1; }
+    .header-info .name { font-size: 15px; font-weight: 700; color: #fff; }
+    .header-info .status {
+      font-size: 12px; color: rgba(255,255,255,0.75);
+      display: flex; align-items: center; gap: 5px; margin-top: 2px;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+    .minimize-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.7); padding: 4px;
+    }
+    .minimize-btn:hover { color: #fff; }
+
+    /* ── Messages area ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+
+    /* ── Message bubbles ── */
+    .msg { display: flex; gap: 8px; max-width: 85%; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg.bot  { align-self: flex-start; }
+
+    .msg-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      margin-top: auto;
+    }
+    .msg.bot  .msg-avatar { background: #eef2ff; color: #4f46e5; }
+    .msg.user .msg-avatar { background: #4f46e5; color: #fff; }
+
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .msg.bot  .bubble {
+      background: #f3f4f6;
+      color: #111827;
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user .bubble {
+      background: #4f46e5;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-time {
+      font-size: 10.5px;
+      color: #9ca3af;
+      margin-top: 4px;
+      text-align: right;
+    }
+    .msg.bot .msg-time { text-align: left; }
+
+    /* ── Typing indicator ── */
+    .typing { display: flex; align-items: center; gap: 4px; padding: 12px 14px; }
+    .typing span {
+      width: 7px; height: 7px;
+      background: #9ca3af;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30%          { transform: translateY(-6px); }
+    }
+
+    /* ── Ticket badge ── */
+    .ticket-badge {
+      align-self: center;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #16a34a;
+    }
+
+    /* ── Quick replies ── */
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 16px 12px;
+    }
+    .qr-btn {
+      background: #fff;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #4f46e5;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      font-family: inherit;
+    }
+    .qr-btn:hover { background: #eef2ff; border-color: #6366f1; }
+
+    /* ── Input bar ── */
+    .input-bar {
+      border-top: 1px solid #f0f0f0;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      background: #fff;
+    }
+    .chat-input {
+      flex: 1;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      max-height: 80px;
+      overflow-y: auto;
+      line-height: 1.4;
+      transition: border-color 0.14s;
+      color: #111827;
+    }
+    .chat-input:focus { border-color: #6366f1; }
+    .chat-input::placeholder { color: #c0c4cc; }
+
+    .send-btn {
+      width: 38px; height: 38px;
+      background: #4f46e5;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.14s, transform 0.1s;
+    }
+    .send-btn:hover  { background: #4338ca; }
+    .send-btn:active { transform: scale(0.92); }
+    .send-btn:disabled { background: #c7d2fe; cursor: not-allowed; }
+    .send-btn svg { width: 17px; height: 17px; }
+
+    /* ── Intro / name capture ── */
+    .intro-panel {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .intro-panel p {
+      font-size: 13.5px;
+      color: #6b7280;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .intro-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      color: #111827;
+      transition: border-color 0.14s;
+    }
+    .intro-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    .start-btn {
+      width: 100%;
+      padding: 11px;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.14s;
+    }
+    .start-btn:hover { background: #4338ca; }
+
+    @media (max-width: 460px) {
+      body { padding: 0; align-items: flex-end; }
+      .chat-window { max-width: 100%; height: 100vh; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-window">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
+    <div class="header-info">
+      <div class="name">TechCorp AI Support</div>
+      <div class="status">
+        <span class="status-dot"></span>
+        Online — replies in seconds
+      </div>
+    </div>
+    <button class="minimize-btn" title="Minimize">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages" id="messages"></div>
+
+  <!-- Quick replies -->
+  <div class="quick-replies" id="quickReplies" style="display:none">
+    <button class="qr-btn" onclick="sendQuick('Password reset')">Password reset</button>
+    <button class="qr-btn" onclick="sendQuick('Billing issue')">Billing issue</button>
+    <button class="qr-btn" onclick="sendQuick('Technical problem')">Technical problem</button>
+    <button class="qr-btn" onclick="sendQuick('Talk to human')">Talk to human</button>
+  </div>
+
+  <!-- Intro panel (name + email capture) -->
+  <div class="intro-panel" id="introPanel">
+    <p>👋 Hi there! Before we start, please share your details.</p>
+    <input class="intro-input" id="introName"  type="text"  placeholder="Your name" />
+    <input class="intro-input" id="introEmail" type="email" placeholder="Your email" />
+    <button class="start-btn" id="startBtn" onclick="startChat()">Start Chat</button>
+  </div>
+
+  <!-- Input bar (hidden until intro done) -->
+  <div class="input-bar" id="inputBar" style="display:none">
+    <textarea class="chat-input" id="chatInput"
+              placeholder="Type your message…" rows="1"
+              onkeydown="handleKey(event)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const API = '/web-form/submit';
+  const GROQ_KEY = '';  // 👈 Yahan apni free Groq key daalo: console.groq.com
+
+  let userName  = '';
+  let userEmail = '';
+  let ticketId  = '';
+  let isWaiting = false;
+
+  const messagesEl   = document.getElementById('messages');
+  const inputBar     = document.getElementById('inputBar');
+  const introPanel   = document.getElementById('introPanel');
+  const quickReplies = document.getElementById('quickReplies');
+  const chatInput    = document.getElementById('chatInput');
+  const sendBtn      = document.getElementById('sendBtn');
+
+  // ── Auto-resize textarea ──
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+  });
+
+  function now() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  // ── Add a message bubble ──
+  function addMsg(text, type = 'bot', time = true) {
+    const wrap = document.createElement('div');
+    wrap.className = `msg ${type}`;
+
+    const avatarEl = document.createElement('div');
+    avatarEl.className = 'msg-avatar';
+    avatarEl.textContent = type === 'bot' ? 'AI' : (userName ? userName[0].toUpperCase() : 'U');
+
+    const right = document.createElement('div');
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    right.appendChild(bubble);
+
+    if (time) {
+      const t = document.createElement('div');
+      t.className = 'msg-time';
+      t.textContent = now();
+      right.appendChild(t);
+    }
+
+    wrap.appendChild(avatarEl);
+    wrap.appendChild(right);
+    messagesEl.appendChild(wrap);
+    scrollBottom();
+    return wrap;
+  }
+
+  // ── Ticket badge ──
+  function addTicketBadge(id) {
+    const badge = document.createElement('div');
+    badge.className = 'ticket-badge';
+    badge.textContent = `Ticket ${id} created`;
+    messagesEl.appendChild(badge);
+    scrollBottom();
+  }
+
+  // ── Typing indicator ──
+  function showTyping() {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg bot';
+    wrap.id = 'typing';
+
+    const av = document.createElement('div');
+    av.className = 'msg-avatar';
+    av.textContent = 'AI';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble typing';
+    bubble.innerHTML = '<span></span><span></span><span></span>';
+
+    wrap.appendChild(av);
+    wrap.appendChild(bubble);
+    messagesEl.appendChild(wrap);
+    scrollBottom();
+  }
+
+  function hideTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
+
+  // ── Start chat after name/email ──
+  function startChat() {
+    const name  = document.getElementById('introName').value.trim();
+    const email = document.getElementById('introEmail').value.trim();
+
+    if (name.length < 2) {
+      document.getElementById('introName').style.borderColor = '#f87171';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('introEmail').style.borderColor = '#f87171';
+      return;
+    }
+
+    userName  = name;
+    userEmail = email;
+
+    introPanel.style.display = 'none';
+    inputBar.style.display   = 'flex';
+    quickReplies.style.display = 'flex';
+
+    addMsg(`Hi ${name}! 👋 I'm your AI support assistant. How can I help you today?`);
+    setTimeout(() => addMsg('You can type your question below, or pick a common topic above.'), 600);
+  }
+
+  // ── Send quick reply ──
+  function sendQuick(text) {
+    chatInput.value = text;
+    sendMessage();
+  }
+
+  // ── Handle Enter key ──
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // ── Real Groq AI call ──
+  async function getGroqReply(text) {
+    if (!GROQ_KEY) return null;
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'llama3-8b-8192',
+          messages: [
+            {
+              role: 'system',
+              content: `You are TechCorp's friendly AI support assistant. Customer name: ${userName}. Email: ${userEmail}.
+Help with: account issues, password reset, billing, technical problems, general questions.
+Rules: Keep replies short (2-4 sentences). Be warm and helpful. If billing/legal/security → say you'll escalate to specialist team. Never make up features.`,
+            },
+            { role: 'user', content: text },
+          ],
+          max_tokens: 200,
+          temperature: 0.7,
+        }),
+        signal: AbortSignal.timeout(8000),
+      });
+      const data = await res.json();
+      return data?.choices?.[0]?.message?.content || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // ── Keyword fallback (when no Groq key) ──
+  function getAIReply(text) {
+    const t = text.toLowerCase();
+
+    if (/who are you|what are you|your name|kaun ho/.test(t))
+      return `I'm TechCorp's AI Support Assistant — available 24/7 to help with your questions. How can I assist you today, ${userName}?`;
+
+    if (/password|login|sign in|access|account/.test(t))
+      return `For password reset:\n1. Go to techcorp.io/login\n2. Click "Forgot Password"\n3. Check your email (${userEmail}) for the reset link\n\nIf the email doesn't arrive within 5 minutes, check your spam folder. Need more help?`;
+
+    if (/billing|payment|charge|invoice|refund/.test(t))
+      return `I'm connecting you with our Billing team for this — they'll respond at ${userEmail} within 4 hours. Your ticket has been marked as priority. 💳`;
+
+    if (/human|agent|real person|support staff|bande se baat/.test(t))
+      return `Sure! I'm escalating your chat to a human agent now. Someone from our support team will reach out at ${userEmail} within 2 hours. ⏱️`;
+
+    if (/bug|error|broken|not working|crash|issue/.test(t))
+      return `Sorry to hear that! Please share:\n1. What exactly happened?\n2. Which browser/device?\n3. Any error message?\n\nThis will help us fix it faster.`;
+
+    if (/price|cost|plan|subscription|upgrade|enterprise/.test(t))
+      return `For pricing details, I'm connecting you with our Sales team. They'll reach out at ${userEmail} shortly with the best plan for your needs. 📋`;
+
+    if (/thank|shukriya|thanks|great|good/.test(t))
+      return `You're welcome, ${userName}! 😊 Is there anything else I can help you with today?`;
+
+    if (/hello|hi|hey|salam|assalam/.test(t))
+      return `Hello ${userName}! How can I help you today? You can ask me about account issues, technical problems, billing, or anything else.`;
+
+    if (/bye|goodbye|khuda hafiz/.test(t))
+      return `Thank you for contacting TechCorp Support, ${userName}! Have a great day. Feel free to come back anytime. 👋`;
+
+    // Default
+    return `Thanks for your message! I've created ticket **${ticketId}** for your query.\n\nOur team will review this and respond at **${userEmail}** within 8 hours.\n\nIs there anything else I can help with right now?`;
+  }
+
+  // ── Send message ──
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || isWaiting) return;
+
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    quickReplies.style.display = 'none';
+    isWaiting = true;
+    sendBtn.disabled = true;
+
+    addMsg(text, 'user');
+    showTyping();
+
+    // Generate ticket ID once
+    if (!ticketId) {
+      ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    }
+
+    // Simulate AI thinking delay (1.2 - 2s)
+    const delay = 1200 + Math.random() * 800;
+    await new Promise(r => setTimeout(r, delay));
+
+    // Try Groq AI first (real AI), then backend, then keyword fallback
+    const groqReply = await getGroqReply(text);
+
+    hideTyping();
+
+    // Try real backend first, fall back to local AI
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:     userName,
+          email:    userEmail,
+          subject:  text.slice(0, 80),
+          message:  text,
+          category: 'general',
+          priority: 'medium',
+        }),
+        signal: AbortSignal.timeout(3000),  // 3s timeout
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ticket_id) { ticketId = data.ticket_id; addTicketBadge(ticketId); }
+      }
+    } catch (_) {
+      // Backend not available — use local AI (no error shown to user)
+    }
+
+    addMsg(groqReply || getAIReply(text));
+
+    isWaiting = false;
+    sendBtn.disabled = false;
+    chatInput.focus();
+  }
+
+  // ── Enter key on intro ──
+  document.getElementById('introEmail').addEventListener('keydown', e => {
+    if (e.key === 'Enter') startChat();
+  });
+</script>
+</body>
+</html>

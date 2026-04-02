@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fte-daily-reporter
+  namespace: fte-production
+  labels:
+    app: fte-daily-reporter
+spec:
+  # Runs at 01:00 UTC every day (after midnight data is settled).
+  schedule: "0 1 * * *"
+  concurrencyPolicy: Forbid          # never run two reports at once
+  successfulJobsHistoryLimit: 7      # keep last 7 successful runs
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2                # retry up to 2 times on failure
+      template:
+        metadata:
+          labels:
+            app: fte-daily-reporter
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: fte-daily-reporter
+              image: customer-success-fte:latest
+              command: ["python", "-m", "production.workers.daily_report"]
+              envFrom:
+                - configMapRef:
+                    name: fte-config
+                - secretRef:
+                    name: fte-secrets
+              env:
+                - name: DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: fte-secrets
+                      key: DATABASE_PASSWORD
+                - name: DATABASE_URL
+                  value: "postgresql://fte_user:$(DATABASE_PASSWORD)@postgres-service:5432/fte_db"
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu:    "200m"
+                limits:
+                  memory: "512Mi"
+                  cpu:    "500m"

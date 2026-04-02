@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fte-worker
+  namespace: fte-production
+  labels:
+    app: fte-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fte-worker
+  template:
+    metadata:
+      labels:
+        app: fte-worker
+    spec:
+      containers:
+        - name: fte-worker
+          image: customer-success-fte:latest
+          command: ["python", "-m", "production.workers.message_processor"]
+          envFrom:
+            - configMapRef:
+                name: fte-config
+            - secretRef:
+                name: fte-secrets
+          env:
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fte-secrets
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_URL
+              value: "postgresql://fte_user:$(DATABASE_PASSWORD)@postgres-service:5432/fte_db"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu:    "500m"
+            limits:
+              memory: "1Gi"
+              cpu:    "1000m"

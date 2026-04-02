@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: #111827;
+    }
+
+    /* ── Wrapper ── */
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Brand ── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: #4f46e5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+    .brand-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.2px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 32px 28px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-head {
+      margin-bottom: 24px;
+    }
+    .card-head h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .card-head p {
+      font-size: 13.5px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f1f3;
+      margin: 0 0 24px;
+    }
+
+    /* ── Form fields ── */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .field:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #374151;
+      letter-spacing: 0.01em;
+    }
+    .req {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    /* Input with optional leading icon */
+    .input-wrap {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: #9ca3af;
+      pointer-events: none;
+    }
+    .has-icon input,
+    .has-icon select {
+      padding-left: 34px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 9px;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: #111827;
+      background: #fafafa;
+      outline: none;
+      transition: border-color 0.14s, box-shadow 0.14s, background 0.14s;
+      line-height: 1.5;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #c0c4cc;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.11);
+      background: #fff;
+    }
+    input.err,
+    select.err,
+    textarea.err {
+      border-color: #f87171;
+      background: #fff7f7;
+    }
+
+    select {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236b7280' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 11px center;
+      padding-right: 28px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Inline field error */
+    .field-err {
+      font-size: 11.5px;
+      color: #ef4444;
+      display: none;
+      align-items: center;
+      gap: 3px;
+    }
+    .field-err.show {
+      display: flex;
+    }
+
+    /* ── Submit button ── */
+    .btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 11px 16px;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.14s, box-shadow 0.14s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.22);
+    }
+    .btn:hover  { background: #4338ca; box-shadow: 0 4px 14px rgba(79,70,229,.3); }
+    .btn:active { transform: scale(0.985); }
+    .btn:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .spinner {
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    .footer-note {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 11.5px;
+      color: #9ca3af;
+    }
+
+    /* ── Success state ── */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 12px 0 8px;
+    }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background: #f0fdf4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .success-icon svg { width: 26px; height: 26px; color: #22c55e; }
+    .success h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .success p  { font-size: 13.5px; color: #6b7280; margin-bottom: 18px; }
+    .ticket {
+      display: inline-block;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: #4f46e5;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+    .reset-btn {
+      background: none;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4f46e5;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+
+    /* ── Error banner ── */
+    .banner {
+      display: none;
+      align-items: flex-start;
+      gap: 8px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 9px;
+      padding: 11px 13px;
+      font-size: 13px;
+      color: #b91c1c;
+      margin-bottom: 18px;
+    }
+    .banner.show { display: flex; }
+    .banner svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .card { padding: 24px 20px 20px; }
+      .row  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+    </div>
+    <span class="brand-name">TechCorp Support</span>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-head">
+      <h1>Get in touch</h1>
+      <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Error banner -->
+    <div class="banner" id="banner">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      <span id="bannerText"></span>
+    </div>
+
+    <!-- Form -->
+    <form id="form" novalidate>
+
+      <!-- Name + Email -->
+      <div class="row">
+        <div class="field">
+          <label for="name">Full Name <span class="req">*</span></label>
+          <div class="input-wrap has-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input id="name" name="name" type="text"
+                   placeholder="Jane Smith" autocomplete="name" />
+          </div>
+          <span class="field-err" id="nameErr">
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            Please enter your name
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <div class="input-wrap has-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input id="email" name="email" type="email"
+                   placeholder="you@company.com" autocomplete="email" />
+          </div>
+          <span class="field-err" id="emailErr">
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            Enter a valid email address
+          </span>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="field">
+        <label for="subject">Subject <span class="req">*</span></label>
+        <input id="subject" name="subject" type="text"
+               placeholder="Brief description of your issue" />
+        <span class="field-err" id="subjectErr">
+          <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          Subject is required
+        </span>
+      </div>
+
+      <!-- Category + Priority -->
+      <div class="row">
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="general">General Question</option>
+            <option value="technical">Technical Issue</option>
+            <option value="billing">Billing &amp; Payments</option>
+            <option value="account">Account &amp; Login</option>
+            <option value="bug">Bug Report</option>
+            <option value="feedback">Feedback</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="field">
+        <label for="message">
+          Message <span class="req">*</span>
+        </label>
+        <textarea id="message" name="message" rows="4"
+                  placeholder="Describe your issue in detail…"></textarea>
+        <span class="field-err" id="messageErr">
+          <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          Message must be at least 10 characters
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn" id="submitBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+        Send Message
+      </button>
+
+    </form>
+
+    <!-- Success state -->
+    <div class="success" id="success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2>Message sent!</h2>
+      <p>We received your request and will respond shortly.</p>
+      <div class="ticket" id="ticketId">–</div><br/>
+      <button class="reset-btn" onclick="reset()">Send another message</button>
+    </div>
+
+  </div>
+
+  <p class="footer-note">We typically respond within a few minutes &mdash; 24/7.</p>
+</div>
+
+<script>
+  const API = '/api/support/submit';
+
+  const form      = document.getElementById('form');
+  const success   = document.getElementById('success');
+  const submitBtn = document.getElementById('submitBtn');
+  const banner    = document.getElementById('banner');
+  const bannerText = document.getElementById('bannerText');
+
+  // Clear errors on input
+  ['name','email','subject','message'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      document.getElementById(id).classList.remove('err');
+      document.getElementById(id + 'Err').classList.remove('show');
+      banner.classList.remove('show');
+    });
+  });
+
+  function setErr(id, show) {
+    document.getElementById(id).classList.toggle('err', show);
+    document.getElementById(id + 'Err').classList.toggle('show', show);
+  }
+
+  function validate(d) {
+    let ok = true;
+    if (!d.name.trim() || d.name.trim().length < 2) { setErr('name', true); ok = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) { setErr('email', true); ok = false; }
+    if (!d.subject.trim()) { setErr('subject', true); ok = false; }
+    if (d.message.trim().length < 10) { setErr('message', true); ok = false; }
+    return ok;
+  }
+
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    submitBtn.innerHTML = on
+      ? '<span class="spinner"></span> Sending…'
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+           <line x1="22" y1="2" x2="11" y2="13"/>
+           <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+         </svg> Send Message`;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    banner.classList.remove('show');
+
+    const data = {
+      name:     document.getElementById('name').value,
+      email:    document.getElementById('email').value,
+      subject:  document.getElementById('subject').value,
+      category: document.getElementById('category').value,
+      priority: document.getElementById('priority').value,
+      message:  document.getElementById('message').value,
+    };
+
+    if (!validate(data)) return;
+
+    setLoading(true);
+    try {
+      const res  = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.detail || json.message || 'Submission failed.');
+
+      document.getElementById('ticketId').textContent =
+        json.ticket_id || 'WEB-' + Date.now().toString(36).toUpperCase();
+      form.style.display    = 'none';
+      success.style.display = 'block';
+    } catch (err) {
+      bannerText.textContent = err.message || 'Something went wrong. Please try again.';
+      banner.classList.add('show');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  function reset() {
+    form.reset();
+    form.style.display    = 'block';
+    success.style.display = 'none';
+    banner.classList.remove('show');
+  }
+</script>
+</body>
+</html>

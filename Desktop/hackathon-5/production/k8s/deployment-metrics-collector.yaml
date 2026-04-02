@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fte-metrics-collector
+  namespace: fte-production
+  labels:
+    app: fte-metrics-collector
+spec:
+  replicas: 1          # single collector — metrics aggregation doesn't need HA replicas
+  selector:
+    matchLabels:
+      app: fte-metrics-collector
+  template:
+    metadata:
+      labels:
+        app: fte-metrics-collector
+    spec:
+      containers:
+        - name: fte-metrics-collector
+          image: customer-success-fte:latest
+          command: ["python", "-m", "production.workers.metrics_collector"]
+          envFrom:
+            - configMapRef:
+                name: fte-config
+            - secretRef:
+                name: fte-secrets
+          env:
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fte-secrets
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_URL
+              value: "postgresql://fte_user:$(DATABASE_PASSWORD)@postgres-service:5432/fte_db"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu:    "100m"
+            limits:
+              memory: "256Mi"
+              cpu:    "200m"

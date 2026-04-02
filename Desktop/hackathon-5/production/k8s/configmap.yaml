@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fte-config
+  namespace: fte-production
+data:
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"
+  DATABASE_HOST:            "postgres-service"
+  DATABASE_PORT:            "5432"
+  DATABASE_NAME:            "fte_db"
+  DATABASE_USER:            "fte_user"
+  LOG_LEVEL:                "INFO"
+  LOG_FORMAT:               "json"
+  ENVIRONMENT:              "production"

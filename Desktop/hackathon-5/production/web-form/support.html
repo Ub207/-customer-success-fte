@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechCorp Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 60px;
+      color: #1a1d23;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .logo {
+      width: 36px; height: 36px;
+      background: #4f46e5;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo svg { width: 20px; height: 20px; }
+    .brand { font-size: 17px; font-weight: 700; color: #1a1d23; letter-spacing: -0.3px; }
+    .brand span { color: #4f46e5; }
+
+    /* ── Card ── */
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+      width: 100%;
+      max-width: 520px;
+      padding: 36px 36px 32px;
+    }
+
+    /* ── Card header ── */
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .card-icon {
+      width: 40px; height: 40px;
+      background: #eef2ff;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-icon svg { width: 20px; height: 20px; color: #4f46e5; }
+    .card-title h1 { font-size: 18px; font-weight: 700; }
+    .card-subtitle {
+      font-size: 13.5px;
+      color: #6b7280;
+      margin-bottom: 28px;
+      padding-left: 52px;
+      line-height: 1.5;
+    }
+
+    /* ── Status pill ── */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #16a34a;
+      margin-bottom: 24px;
+    }
+    .dot {
+      width: 7px; height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(.85); }
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 0 0 24px;
+    }
+
+    /* ── Form layout ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group:last-of-type { margin-bottom: 0; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .req { color: #ef4444; font-size: 12px; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1d23;
+      background: #fafafa;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+      background: #fff;
+    }
+    input.error, select.error, textarea.error {
+      border-color: #f87171;
+      background: #fff5f5;
+    }
+    select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+
+    .field-error {
+      font-size: 12px;
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Char counter ── */
+    .label-row { display: flex; align-items: center; justify-content: space-between; }
+    .char-count { font-size: 11.5px; color: #9ca3af; font-weight: 500; }
+    .char-count.warn { color: #f59e0b; }
+    .char-count.over { color: #ef4444; }
+
+    /* ── Input with icon ── */
+    .input-wrap { position: relative; }
+    .input-wrap .input-icon {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: #9ca3af; pointer-events: none;
+    }
+    .input-wrap input { padding-left: 36px; }
+
+    /* ── Alert ── */
+    .alert {
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .alert-error  { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+    .alert-icon   { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Submit button ── */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 14.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .15s, transform .1s, box-shadow .15s;
+      margin-top: 22px;
+      box-shadow: 0 2px 8px rgba(79,70,229,.25);
+    }
+    .btn:hover  { background: #4338ca; box-shadow: 0 4px 14px rgba(79,70,229,.35); }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { background: #a5b4fc; cursor: not-allowed; box-shadow: none; }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer note ── */
+    .form-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* ── Success state ── */
+    .success-card {
+      text-align: center;
+      padding: 8px 0 12px;
+    }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: #f0fdf4;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .success-icon svg { width: 32px; height: 32px; color: #22c55e; }
+    .success-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .success-card p  { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+    .ticket-box {
+      background: #f8faff;
+      border: 1px solid #e0e7ff;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 0 auto 20px;
+    }
+    .ticket-box .label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+    .ticket-id { font-size: 18px; font-weight: 700; color: #4f46e5; font-family: monospace; letter-spacing: .5px; }
+    .sla-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #92400e;
+      margin-bottom: 20px;
+    }
+    .sla-box strong { color: #78350f; }
+    .btn-ghost {
+      background: none; border: none; color: #4f46e5;
+      font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      .card { padding: 28px 20px 24px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .card-subtitle { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Brand Header -->
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
+    <span class="brand">Tech<span>Corp</span> Support</span>
+  </div>
+
+  <!-- Card -->
+  <div class="card" id="card">
+
+    <!-- Card Header -->
+    <div class="card-title">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+      </div>
+      <h1>Contact Support</h1>
+    </div>
+    <p class="card-subtitle">Describe your issue and our AI agent will respond within minutes — 24/7.</p>
+
+    <!-- Live status -->
+    <div class="status-pill">
+      <span class="dot"></span>
+      AI Agent Online
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Error alert -->
+    <div class="alert alert-error" id="errorAlert" style="display:none">
+      <svg class="alert-icon" width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Form -->
+    <form id="supportForm" novalidate>
+
+      <!-- Name + Email -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Full Name <span class="req">*</span></label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="name" name="name" placeholder="Jane Smith" autocomplete="name" />
+          </div>
+          <span class="field-error" id="nameError" style="display:none">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            Required (min. 2 characters)
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address <span class="req">*</span></label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email" />
+          </div>
+          <span class="field-error" id="emailError" style="display:none">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            Enter a valid email address
+          </span>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="form-group">
+        <label for="subject">Subject <span class="req">*</span></label>
+        <input type="text" id="subject" name="subject" placeholder="Brief description of your issue" />
+        <span class="field-error" id="subjectError" style="display:none">
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          Required (min. 5 characters)
+        </span>
+      </div>
+
+      <!-- Category + Priority -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="general">General Question</option>
+            <option value="technical">Technical Issue</option>
+            <option value="billing">Billing &amp; Payments</option>
+            <option value="account">Account &amp; Login</option>
+            <option value="bug">Bug Report</option>
+            <option value="feedback">Feedback</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority">
+            <option value="low">Low — General inquiry</option>
+            <option value="medium" selected>Medium — Affecting my work</option>
+            <option value="high">High — Blocking me now</option>
+            <option value="urgent">Urgent — Critical impact</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group">
+        <div class="label-row">
+          <label for="message">Message <span class="req">*</span></label>
+          <span class="char-count" id="charCount">0 / 2000</span>
+        </div>
+        <textarea id="message" name="message" rows="5" placeholder="Describe your issue in detail. Include error messages, steps to reproduce, and what you've already tried."></textarea>
+        <span class="field-error" id="messageError" style="display:none">
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <span id="messageErrorText">Required (min. 10 characters)</span>
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn" id="submitBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+        Send Message
+      </button>
+
+      <p class="form-footer">Powered by TechCorp AI &mdash; average response under 2 minutes</p>
+    </form>
+
+    <!-- Success State (hidden initially) -->
+    <div class="success-card" id="successCard" style="display:none">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2>Request Received!</h2>
+      <p>Our AI agent is processing your request and will respond shortly.</p>
+
+      <div class="ticket-box">
+        <div class="label">Your Ticket ID</div>
+        <div class="ticket-id" id="ticketIdDisplay">—</div>
+      </div>
+
+      <div class="sla-box">
+        <strong>Estimated response:</strong> <span id="slaDisplay">within minutes</span>
+      </div>
+
+      <button class="btn-ghost" onclick="resetForm()">Submit another request</button>
+    </div>
+
+  </div>
+
+  <script>
+    const API_URL = document.currentScript?.dataset?.apiUrl || '/api/support/submit';
+    const MAX_CHARS = 2000;
+
+    const form      = document.getElementById('supportForm');
+    const successCard = document.getElementById('successCard');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorText  = document.getElementById('errorText');
+    const charCount  = document.getElementById('charCount');
+    const msgField   = document.getElementById('message');
+
+    // Live char counter
+    msgField.addEventListener('input', () => {
+      const len = msgField.value.length;
+      charCount.textContent = `${len} / ${MAX_CHARS}`;
+      charCount.className = 'char-count' + (len > MAX_CHARS ? ' over' : len > MAX_CHARS * 0.9 ? ' warn' : '');
+    });
+
+    // Clear error on input
+    ['name','email','subject','message'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => clearFieldError(id));
+    });
+
+    function setFieldError(id, msg) {
+      const el = document.getElementById(id);
+      const errEl = document.getElementById(id + 'Error');
+      if (el) el.classList.add('error');
+      if (errEl) {
+        const textSpan = errEl.querySelector('span') || errEl;
+        if (id === 'message' && msg) document.getElementById('messageErrorText').textContent = msg;
+        errEl.style.display = 'flex';
+      }
+    }
+
+    function clearFieldError(id) {
+      const el = document.getElementById(id);
+      const errEl = document.getElementById(id + 'Error');
+      if (el) el.classList.remove('error');
+      if (errEl) errEl.style.display = 'none';
+      errorAlert.style.display = 'none';
+    }
+
+    function validate(data) {
+      let ok = true;
+      if (!data.name.trim() || data.name.trim().length < 2) { setFieldError('name'); ok = false; }
+      if (!data.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { setFieldError('email'); ok = false; }
+      if (!data.subject.trim() || data.subject.trim().length < 5) { setFieldError('subject'); ok = false; }
+      if (!data.message.trim() || data.message.trim().length < 10) { setFieldError('message', 'Required (min. 10 characters)'); ok = false; }
+      if (data.message.length > MAX_CHARS) { setFieldError('message', `Max ${MAX_CHARS} characters`); ok = false; }
+      return ok;
+    }
+
+    function setLoading(on) {
+      if (on) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Send Message`;
+      }
+    }
+
+    function showSuccess(ticket_id, sla) {
+      form.style.display = 'none';
+      successCard.style.display = 'block';
+      document.getElementById('ticketIdDisplay').textContent = ticket_id || 'WEB-' + Date.now().toString(36).toUpperCase();
+      document.getElementById('slaDisplay').textContent = sla || 'within minutes';
+    }
+
+    function resetForm() {
+      form.reset();
+      charCount.textContent = '0 / 2000';
+      charCount.className = 'char-count';
+      errorAlert.style.display = 'none';
+      successCard.style.display = 'none';
+      form.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorAlert.style.display = 'none';
+
+      const data = {
+        name:     document.getElementById('name').value,
+        email:    document.getElementById('email').value,
+        subject:  document.getElementById('subject').value,
+        category: document.getElementById('category').value,
+        priority: document.getElementById('priority').value,
+        message:  document.getElementById('message').value,
+      };
+
+      if (!validate(data)) return;
+
+      setLoading(true);
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || json.message || 'Submission failed. Please try again.');
+
+        const slaMap = { urgent: '2 hours', high: '4 hours', medium: '8 hours', low: '24 hours' };
+        showSuccess(json.ticket_id, json.estimated_response_time || slaMap[data.priority]);
+      } catch (err) {
+        errorText.textContent = err.message || 'Something went wrong. Please try again.';
+        errorAlert.style.display = 'flex';
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>
