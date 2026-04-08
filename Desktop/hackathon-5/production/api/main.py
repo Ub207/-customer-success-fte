@@ -14,6 +14,7 @@ Endpoints:
 """
 
 import structlog
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -31,6 +32,26 @@ configure_logging()
 logger = structlog.get_logger(__name__)
 
 # ---------------------------------------------------------------------------
+# Lifespan (replaces deprecated on_event)
+# ---------------------------------------------------------------------------
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup
+    logger.info("API starting up")
+    try:
+        from production.database import get_db_pool
+        await get_db_pool()
+        logger.info("Database pool ready")
+    except Exception as e:
+        logger.warning("Database not available at startup — running in degraded mode", error=str(e))
+    yield
+    # shutdown
+    logger.info("API shutting down")
+    from production.database import close_db_pool
+    await close_db_pool()
+
+# ---------------------------------------------------------------------------
 # App
 # ---------------------------------------------------------------------------
 
@@ -40,6 +61,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -57,27 +79,6 @@ app.add_middleware(
 app.include_router(gmail_router)
 app.include_router(whatsapp_router)
 app.include_router(web_form_router)
-
-# ---------------------------------------------------------------------------
-# Lifecycle
-# ---------------------------------------------------------------------------
-
-@app.on_event("startup")
-async def on_startup():
-    logger.info("API starting up")
-    try:
-        from production.database import get_db_pool
-        await get_db_pool()
-        logger.info("Database pool ready")
-    except Exception as e:
-        logger.warning("Database not available at startup — running in degraded mode", error=str(e))
-
-
-@app.on_event("shutdown")
-async def on_shutdown():
-    logger.info("API shutting down")
-    from production.database import close_db_pool
-    await close_db_pool()
 
 # ---------------------------------------------------------------------------
 # Health

@@ -28,10 +28,10 @@ VALID_CATEGORIES = {"general", "technical", "billing", "account", "bug", "feedba
 VALID_PRIORITIES = {"low", "medium", "high", "urgent"}
 
 SLA_BY_PRIORITY = {
-    "urgent": "2 hours",
-    "high":   "4 hours",
-    "medium": "8 hours",
-    "low":    "24 hours",
+    "urgent": "Usually within 1 minute",
+    "high":   "Usually within 2 minutes",
+    "medium": "Usually within 5 minutes",
+    "low":    "Usually within 5 minutes",
 }
 
 # ---------------------------------------------------------------------------

@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ticket_id: fallbackTicketId,
       message: `Thank you, ${name}! We've received your message. Our team will be in touch shortly.`,
-      estimated_response_time: '8 hours (business hours)',
+      estimated_response_time: 'Usually within 5 minutes',
       submitted_at: new Date().toISOString(),
       warning: 'Response generated offline - your ticket was logged locally.',
     });

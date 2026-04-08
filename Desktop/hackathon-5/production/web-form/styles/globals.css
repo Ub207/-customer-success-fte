@@ -2,67 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom base styles */
 @layer base {
   html {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; padding: 0; }
+}
 
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    @apply bg-gray-50 text-gray-900;
-    margin: 0;
-    padding: 0;
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.25s ease-out both;
   }
 }
 
-/* Custom component styles */
-@layer components {
-  /* Form input focus ring */
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply outline-none ring-2 ring-indigo-500 ring-offset-1;
-  }
-
-  /* Smooth button transitions */
-  button {
-    @apply transition-all duration-150 ease-in-out;
-  }
-
-  /* Form field error state */
-  .field-error {
-    @apply border-red-400 bg-red-50 focus:ring-red-400;
-  }
-
-  /* Success state */
-  .field-success {
-    @apply border-green-400;
-  }
-}
-
-/* Loading spinner animation */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Pulse animation for online indicator */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
