@@ -7,13 +7,39 @@ Uses aiokafka for async Kafka operations.
 
 import json
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import structlog
 
+# Load .env if not already loaded
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 logger = structlog.get_logger(__name__)
 
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+KAFKA_SASL_USERNAME     = os.environ.get("KAFKA_SASL_USERNAME", "")
+KAFKA_SASL_PASSWORD     = os.environ.get("KAFKA_SASL_PASSWORD", "")
+KAFKA_SECURITY_PROTOCOL = os.environ.get("KAFKA_SECURITY_PROTOCOL", "PLAINTEXT")
+KAFKA_SASL_MECHANISM    = os.environ.get("KAFKA_SASL_MECHANISM", "PLAIN")
+
+def _sasl_kwargs() -> dict:
+    """Return SASL kwargs if credentials are configured."""
+    if KAFKA_SASL_USERNAME and KAFKA_SASL_PASSWORD:
+        import ssl
+        ssl_ctx = ssl.create_default_context()
+        return {
+            "security_protocol":   KAFKA_SECURITY_PROTOCOL,
+            "sasl_mechanism":      KAFKA_SASL_MECHANISM,
+            "sasl_plain_username": KAFKA_SASL_USERNAME,
+            "sasl_plain_password": KAFKA_SASL_PASSWORD,
+            "ssl_context":         ssl_ctx,
+        }
+    return {}
 
 TOPICS: Dict[str, str] = {
     "gmail_inbound": "fte.gmail.inbound",
@@ -42,6 +68,7 @@ class FTEKafkaProducer:
                 bootstrap_servers=self.bootstrap_servers,
                 value_serializer=lambda v: json.dumps(v).encode("utf-8"),
                 key_serializer=lambda k: k.encode("utf-8") if k else None,
+                **_sasl_kwargs(),
             )
             await self._producer.start()
             logger.info("Kafka producer started", servers=self.bootstrap_servers)
@@ -90,6 +117,7 @@ class FTEKafkaConsumer:
                 value_deserializer=lambda v: json.loads(v.decode("utf-8")),
                 auto_offset_reset="earliest",
                 enable_auto_commit=True,
+                **_sasl_kwargs(),
             )
             await self._consumer.start()
             logger.info(
