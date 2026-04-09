@@ -1,0 +1,72 @@
+# k8s/servicemonitor.yaml — Prometheus monitoring for CRM Digital FTE
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fte-api-monitor
+  namespace: fte-production
+  labels:
+    app: customer-success-fte
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: customer-success-fte
+      component: api
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fte-alerts
+  namespace: fte-production
+  labels:
+    app: customer-success-fte
+    release: prometheus
+spec:
+  groups:
+    - name: fte.rules
+      interval: 1m
+      rules:
+        - alert: FTEHighEscalationRate
+          expr: |
+            sum(fte_escalations_total) / sum(fte_tickets_total) > 0.30
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High escalation rate detected"
+            description: "More than 30% of tickets are being escalated to humans. Current rate: {{ $value | humanizePercentage }}"
+
+        - alert: FTEHighResponseLatency
+          expr: |
+            avg(fte_response_latency_ms) > 5000
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High agent response latency"
+            description: "Average response latency is above 5 seconds: {{ $value }}ms"
+
+        - alert: FTEApiDown
+          expr: |
+            up{job="fte-api"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "FTE API is down"
+            description: "The Customer Success FTE API has been unreachable for more than 1 minute."
+
+        - alert: FTENoMessagesProcessed
+          expr: |
+            sum(increase(fte_messages_total[15m])) == 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "No messages processed in 15 minutes"
+            description: "The FTE agent has not processed any messages in the last 15 minutes. Check Kafka consumer and worker pods."

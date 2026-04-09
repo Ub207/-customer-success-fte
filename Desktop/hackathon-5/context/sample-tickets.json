@@ -4,89 +4,467 @@
     "channel": "email",
     "customer_email": "john.smith@company.com",
     "subject": "Can't reset my password",
-    "message": "Hello, I've been trying to reset my password for the past hour but I'm not receiving the reset email. My account email is john.smith@company.com. This is urgent as I have a presentation in 2 hours.",
+    "message": "Hello, I've been trying to reset my password for the past hour but I'm not receiving the reset email. My account email is john.smith@company.com. I've checked my spam folder and there's nothing there. This is urgent as I have a presentation in 2 hours and I need to access our project dashboard.",
     "priority": "high",
     "category": "account"
   },
   {
     "id": "T002",
-    "channel": "whatsapp",
-    "customer_phone": "+1234567890",
-    "message": "Hi how do I add team members?",
+    "channel": "email",
+    "customer_email": "dev.team@fintech.io",
+    "subject": "API returning 500 errors on bulk endpoint",
+    "message": "Hi support team, we've been experiencing intermittent 500 Internal Server Error responses from your /api/v2/tasks/bulk endpoint since yesterday around 3 PM UTC. Our integration is critical for our production pipeline and this is causing data loss. I've attached the full error logs. Request IDs: req_abc123, req_abc124. Please investigate urgently.",
+    "priority": "high",
+    "category": "technical"
+  },
+  {
+    "id": "T003",
+    "channel": "email",
+    "customer_email": "product@saas.co",
+    "subject": "Question about Gantt chart feature",
+    "message": "Hello, I'm evaluating your platform for our team of 25 people. I noticed you have a timeline view but I couldn't find a proper Gantt chart with dependencies. Is this on your roadmap? If so, when might it be available? This is a deal-breaker feature for us.",
     "priority": "medium",
     "category": "general"
   },
   {
-    "id": "T003",
-    "channel": "web_form",
-    "customer_email": "sarah.jones@startup.io",
-    "customer_name": "Sarah Jones",
-    "subject": "API rate limit exceeded",
-    "message": "We're getting HTTP 429 errors on our API integration. We're on the Pro plan. Is there a way to get higher limits?",
-    "category": "technical",
-    "priority": "high"
-  },
-  {
     "id": "T004",
     "channel": "email",
-    "customer_email": "mike@enterprise.co",
-    "subject": "How much is the enterprise plan?",
-    "message": "We have 500 users and need enterprise features. Can you tell me the pricing for our scale?",
+    "customer_email": "finance@enterprise.com",
+    "subject": "Invoice discrepancy on last month's bill",
+    "message": "We received our invoice for March and it shows $2,400 for 40 seats but we only have 38 active users as of March 1st. Two users were deactivated on February 28th. According to your billing policy we should not be charged for deactivated users. Please issue a corrected invoice and credit our account for the 2 extra seats ($120).",
     "priority": "medium",
     "category": "billing"
   },
   {
     "id": "T005",
-    "channel": "whatsapp",
-    "customer_phone": "+9876543210",
-    "message": "your app is broken!! tasks not syncing at all for 3 days now this is ridiculous",
-    "priority": "high",
-    "category": "bug"
-  },
-  {
-    "id": "T006",
-    "channel": "web_form",
-    "customer_email": "dev@techstartup.com",
-    "customer_name": "Alex Chen",
-    "subject": "Webhook integration help",
-    "message": "I'm trying to set up webhooks but I'm not sure which events to listen to for task completion. Can you help?",
-    "category": "technical",
-    "priority": "medium"
-  },
-  {
-    "id": "T007",
     "channel": "email",
-    "customer_email": "lisa@business.com",
-    "subject": "I want a refund",
-    "message": "I signed up for the annual Pro plan but we decided not to use TechCorp. I'd like a full refund please.",
+    "customer_email": "ceo@startup.com",
+    "subject": "Need enterprise pricing for 500 users URGENT",
+    "message": "We are a fast-growing company and need to onboard 500 users next quarter. Your website only shows plans up to 50 users. I need a custom enterprise quote with volume discounts, dedicated support SLA, and SSO included. If you can't provide competitive pricing in the next 48 hours, we will be moving to a competitor. This is a $150,000 annual deal.",
     "priority": "high",
     "category": "billing"
   },
   {
+    "id": "T006",
+    "channel": "email",
+    "customer_email": "lisa@business.com",
+    "subject": "I want a refund",
+    "message": "I signed up for the annual Pro plan last week but we decided not to use TechCorp after all. I have not used the product beyond the initial setup. Per your 30-day money-back guarantee, I am requesting a full refund of $599. Please process this immediately and confirm via email.",
+    "priority": "high",
+    "category": "billing"
+  },
+  {
+    "id": "T007",
+    "channel": "email",
+    "customer_email": "furious.customer@company.net",
+    "subject": "This is absolutely unacceptable - you've lost all our data",
+    "message": "I am absolutely furious right now. Your damn system wiped out 3 months of our project data during the migration you performed last night WITHOUT WARNING. We never consented to any migration. This is complete bullshit and your support team has been useless. I want to speak to a manager NOW. If this data is not recovered within 24 hours, we are contacting our lawyers and filing a complaint with every review site we can find.",
+    "priority": "high",
+    "category": "bug"
+  },
+  {
     "id": "T008",
-    "channel": "whatsapp",
-    "customer_phone": "+1122334455",
-    "message": "Can I export all my tasks to Excel?",
+    "channel": "email",
+    "customer_email": "pm@corp.io",
+    "subject": "How to set up recurring tasks?",
+    "message": "Hi there, we want to set up weekly recurring tasks for our team's stand-up notes. Ideally every Monday morning at 9 AM. Is there a way to configure recurrence with automatic assignment to rotating team members? We're on the Business plan. Looking forward to your guidance.",
     "priority": "low",
     "category": "general"
   },
   {
     "id": "T009",
     "channel": "email",
-    "customer_email": "pm@corp.io",
-    "subject": "How to set up recurring tasks?",
-    "message": "We want to set up weekly recurring tasks for our team's stand-up notes. How do we configure this?",
+    "customer_email": "integrations@techcorp.com",
+    "subject": "Webhook setup for task completion events",
+    "message": "Hi, I'm trying to configure webhooks for our CI/CD pipeline. Specifically, I need to receive a webhook event when a task status changes to 'done' and when a new comment is added. I've read the docs but I'm unclear on the payload schema for nested subtasks. Can you provide an example payload? Also, does your webhook support retries on failure?",
+    "priority": "medium",
+    "category": "technical"
+  },
+  {
+    "id": "T010",
+    "channel": "email",
+    "customer_email": "it.admin@bigcorp.com",
+    "subject": "SSO integration with Okta - SAML configuration",
+    "message": "We are setting up SAML 2.0 SSO with Okta for our 200-user organization. I've followed the documentation but keep getting a 'SAML assertion validation failed' error. Our Okta instance URL is https://bigcorp.okta.com. I've triple-checked the entity ID and ACS URL. Is there a known issue with Okta when the org uses custom domains? Can we schedule a technical call?",
+    "priority": "high",
+    "category": "technical"
+  },
+  {
+    "id": "T011",
+    "channel": "email",
+    "customer_email": "data.analyst@research.org",
+    "subject": "Data export options - CSV and JSON formats",
+    "message": "Hello, we need to export all our project and task data for a quarterly report. We have about 10,000 tasks across 50 projects. Does your export support JSON format in addition to CSV? Also, can we export custom field data and task history/audit logs? How long does a bulk export typically take for this volume?",
+    "priority": "medium",
+    "category": "general"
+  },
+  {
+    "id": "T012",
+    "channel": "email",
+    "customer_email": "dpo@eu-company.eu",
+    "subject": "GDPR data deletion request for former employee",
+    "message": "We have received a GDPR Right to Erasure request from a former employee, John Doe (john.doe@eu-company.eu). As per GDPR Article 17, we are obligated to delete all personal data associated with this account. Please confirm: (1) What data you hold on this individual, (2) Timeline for deletion, (3) A written confirmation of deletion for our records. We need this completed within 30 days per legal requirement.",
+    "priority": "high",
+    "category": "security"
+  },
+  {
+    "id": "T013",
+    "channel": "email",
+    "customer_email": "admin@team.co",
+    "subject": "Team member permissions - can't restrict project access",
+    "message": "I'm the workspace admin and I'm trying to restrict certain team members from viewing specific projects. I've set the project to 'Private' but the users can still see it in their sidebar. Is there a bug with permission inheritance? We have guests and full members mixed in the same workspace. This is a security concern for us.",
+    "priority": "medium",
+    "category": "account"
+  },
+  {
+    "id": "T014",
+    "channel": "email",
+    "customer_email": "hr@newcompany.com",
+    "subject": "Help with onboarding our team of 30 people",
+    "message": "Hi! We just purchased the Business plan and need to onboard our team of 30 people by next Monday. We're a bit overwhelmed with where to start. Do you offer live onboarding sessions? We'd love a 1-hour walkthrough covering project templates, task assignment, and reporting. Is this included in our plan or is there an additional cost?",
+    "priority": "medium",
+    "category": "general"
+  },
+  {
+    "id": "T015",
+    "channel": "email",
+    "customer_email": "security.conscious@healthcare.com",
+    "subject": "Setting up two-factor authentication for all users",
+    "message": "We're in the healthcare industry and need to enforce two-factor authentication for all users in our workspace. I can see the option in my personal settings but I need to enforce it organization-wide. Is there an admin setting to require 2FA for all members? What 2FA methods are supported - we need to be able to use hardware keys (FIDO2).",
+    "priority": "medium",
+    "category": "security"
+  },
+  {
+    "id": "T016",
+    "channel": "email",
+    "customer_email": "leaving@customer.com",
+    "subject": "Please delete my account and all data",
+    "message": "I would like to permanently delete my account and all associated data. Please confirm what happens to shared workspaces I own - will the data be transferred to another admin or deleted? I want to make sure I download everything first. What is the process and how long does it take? I'd like this completed before my billing renews on the 15th.",
+    "priority": "medium",
+    "category": "account"
+  },
+  {
+    "id": "T017",
+    "channel": "email",
+    "customer_email": "perf.engineer@scale.io",
+    "subject": "Platform very slow with 10,000+ tasks - performance issues",
+    "message": "Since we passed 10,000 tasks in our workspace, the platform has become noticeably slow. Page load times are 8-12 seconds for our main project board, and filtering tasks takes 15+ seconds. We're on the Enterprise plan. Our team of 45 is complaining daily. Is there a known performance threshold? Are there optimization settings we should configure? This is impacting our productivity significantly.",
+    "priority": "high",
+    "category": "bug"
+  },
+  {
+    "id": "T018",
+    "channel": "email",
+    "customer_email": "legal@angrycorp.com",
+    "subject": "Legal notice - data breach and service outage",
+    "message": "This is a formal notice that we intend to pursue legal action against your company. Your platform was down for 6 hours on March 15th (from 2 PM to 8 PM UTC) without prior notice. This caused us to miss a critical client deadline resulting in a $50,000 penalty clause. Furthermore, we believe our data may have been accessed by another tenant during this outage. We will be filing suit unless we receive a full incident report and compensation offer within 7 days.",
+    "priority": "high",
+    "category": "security"
+  },
+  {
+    "id": "T019",
+    "channel": "whatsapp",
+    "customer_phone": "+1234567890",
+    "message": "Hi how do I add team members to my workspace? I'm the admin and I can't find the option",
+    "priority": "medium",
+    "category": "general"
+  },
+  {
+    "id": "T020",
+    "channel": "whatsapp",
+    "customer_phone": "+1122334455",
+    "message": "Can I export all my tasks to Excel? I need to send a report to my boss by end of day",
     "priority": "low",
     "category": "general"
   },
   {
-    "id": "T010",
+    "id": "T021",
+    "channel": "whatsapp",
+    "customer_phone": "+9876543210",
+    "message": "your app is broken!! tasks not syncing at all for 3 days now this is ridiculous I have an important deadline tomorrow and nothing works",
+    "priority": "high",
+    "category": "bug"
+  },
+  {
+    "id": "T022",
+    "channel": "whatsapp",
+    "customer_phone": "+4455667788",
+    "message": "my tasks are not syncing between my phone and laptop. started yesterday. both are showing different task lists. tried logging out and back in but same issue",
+    "priority": "medium",
+    "category": "bug"
+  },
+  {
+    "id": "T023",
+    "channel": "whatsapp",
+    "customer_phone": "+5566778899",
+    "message": "how do I set a due date on a task? I can see the calendar icon but when I tap it nothing happens on iOS 17",
+    "priority": "low",
+    "category": "general"
+  },
+  {
+    "id": "T024",
+    "channel": "whatsapp",
+    "customer_phone": "+6677889900",
+    "message": "does the app support dark mode? my eyes hurt using it at night and I can't find the setting",
+    "priority": "low",
+    "category": "general"
+  },
+  {
+    "id": "T025",
+    "channel": "whatsapp",
+    "customer_phone": "+7788990011",
+    "message": "human",
+    "priority": "high",
+    "category": "general"
+  },
+  {
+    "id": "T026",
+    "channel": "whatsapp",
+    "customer_phone": "+8899001122",
+    "message": "The mobile app keeps crashing every time I try to open a project with more than 50 tasks. iPhone 14 Pro, iOS 17.2. This started after the last update. I need to use the app for client meetings and this is embarrassing. Please fix ASAP",
+    "priority": "high",
+    "category": "bug"
+  },
+  {
+    "id": "T027",
+    "channel": "whatsapp",
+    "customer_phone": "+9900112233",
+    "message": "Do you have task templates? I want to create a standard template for onboarding new employees with the same checklist each time",
+    "priority": "medium",
+    "category": "general"
+  },
+  {
+    "id": "T028",
+    "channel": "whatsapp",
+    "customer_phone": "+1011121314",
+    "message": "Can I integrate with Slack? I want task updates to appear in our Slack channels automatically when someone completes a task or adds a comment",
+    "priority": "medium",
+    "category": "technical"
+  },
+  {
+    "id": "T029",
+    "channel": "whatsapp",
+    "customer_phone": "+1516171819",
+    "message": "Hi I have a billing question. I was charged twice this month - once on March 1st and again on March 3rd for the same amount of $79. Can you check my account and refund the duplicate charge? My email is sarah@mycompany.com",
+    "priority": "high",
+    "category": "billing"
+  },
+  {
+    "id": "T030",
+    "channel": "whatsapp",
+    "customer_phone": "+2021222324",
+    "message": "where do I find my API key? I need to connect a third-party tool to your platform and I can't find it in settings",
+    "priority": "medium",
+    "category": "technical"
+  },
+  {
+    "id": "T031",
+    "channel": "whatsapp",
+    "customer_phone": "+2526272829",
+    "message": "I am going to sue your company if my data is not restored immediately. Your system deleted all my tasks this morning and 6 months of work is gone. I want to speak to a lawyer. This is completely unacceptable and I have screenshots of everything before it happened.",
+    "priority": "high",
+    "category": "account"
+  },
+  {
+    "id": "T032",
+    "channel": "whatsapp",
+    "customer_phone": "+3031323334",
+    "message": "I want to talk to a human agent please. I've been going back and forth with the bot and it's not understanding my issue",
+    "priority": "high",
+    "category": "general"
+  },
+  {
+    "id": "T033",
+    "channel": "whatsapp",
+    "customer_phone": "+3536373839",
+    "message": "How do I export tasks to CSV? I saw an export option before but can't find it now. Did you remove it in the last update?",
+    "priority": "low",
+    "category": "general"
+  },
+  {
+    "id": "T034",
+    "channel": "whatsapp",
+    "customer_phone": "+4041424344",
+    "message": "I'm not getting push notifications anymore. Had them working fine before. Checked phone settings and notifications are enabled for the app. Using Android 13. This has been broken for about a week now",
+    "priority": "medium",
+    "category": "bug"
+  },
+  {
+    "id": "T035",
+    "channel": "whatsapp",
+    "customer_phone": "+4546474849",
+    "message": "I emailed you earlier about upgrading my account from Pro to Business but got no response. I want to upgrade for my team of 15. How do I do this and will I be prorated for the remaining days in my billing cycle?",
+    "priority": "medium",
+    "category": "billing"
+  },
+  {
+    "id": "T036",
+    "channel": "web_form",
+    "customer_email": "dev@techstartup.com",
+    "customer_name": "Alex Chen",
+    "subject": "Webhook integration help needed",
+    "message": "I'm trying to set up webhooks to receive task completion events in our backend system. I've followed the documentation but I'm not sure which events to subscribe to for task completion vs subtask completion. Also, what is the maximum payload size for webhook events? Our tasks can have very long descriptions. Can you provide example payloads for the task.completed and task.updated events?",
+    "category": "technical",
+    "priority": "medium"
+  },
+  {
+    "id": "T037",
+    "channel": "web_form",
+    "customer_email": "sarah.jones@startup.io",
+    "customer_name": "Sarah Jones",
+    "subject": "API rate limit exceeded - need higher limits",
+    "message": "We're getting HTTP 429 Too Many Requests errors on our API integration. We're on the Pro plan which shows 1000 requests/hour limit. Our data pipeline needs to make approximately 3000 calls per hour during our nightly sync window (2 AM - 4 AM UTC). Can we get a temporary or permanent rate limit increase? We're willing to upgrade our plan if needed.",
+    "category": "technical",
+    "priority": "high"
+  },
+  {
+    "id": "T038",
     "channel": "web_form",
     "customer_email": "security@enterprise.com",
     "customer_name": "James Wilson",
-    "subject": "Security compliance question",
-    "message": "We need to know if TechCorp is SOC 2 Type II compliant and GDPR compliant for our enterprise security review.",
+    "subject": "Security compliance - SOC 2 and GDPR documentation",
+    "message": "We need to know if TechCorp is SOC 2 Type II compliant and GDPR compliant for our enterprise security review. Specifically we need: (1) Your most recent SOC 2 Type II report, (2) Data Processing Agreement (DPA) for GDPR, (3) Penetration test results from the last 12 months, (4) Your data residency options - can data be stored in EU only? Please share your trust and security documentation.",
+    "category": "security",
+    "priority": "high"
+  },
+  {
+    "id": "T039",
+    "channel": "web_form",
+    "customer_email": "ops@marketing.co",
+    "customer_name": "Rachel Kim",
+    "subject": "Zapier integration not working after update",
+    "message": "Our Zapier integration stopped working two days ago. The Zap was sending new tasks to our CRM whenever a task was marked complete. I get an 'Authentication failed' error in Zapier even though I reconnected the account. I tried creating a new Zap with fresh credentials and same result. This is blocking our sales team's workflow. Did something change in the API authentication?",
+    "category": "technical",
+    "priority": "high"
+  },
+  {
+    "id": "T040",
+    "channel": "web_form",
+    "customer_email": "it@university.edu",
+    "customer_name": "Professor Mark Davis",
+    "subject": "SAML SSO configuration for university account",
+    "message": "We are setting up SAML-based SSO for our university (3,000 faculty and staff). Our identity provider is Microsoft Azure AD. I've configured the enterprise application in Azure but am getting an error on the service provider side: 'Invalid SAML response signature'. Our Azure tenant ID is abc-123. Can you provide the exact SAML metadata XML for your service provider? Also, do you support Just-In-Time (JIT) provisioning?",
+    "category": "technical",
+    "priority": "high"
+  },
+  {
+    "id": "T041",
+    "channel": "web_form",
+    "customer_email": "pm@migration.com",
+    "customer_name": "Tom Rodriguez",
+    "subject": "Bulk import from Asana - CSV format issues",
+    "message": "We're migrating from Asana to your platform and trying to use the bulk import feature. We exported 2,500 tasks from Asana in CSV format but your importer keeps rejecting the file saying 'Invalid column format'. I've tried reformatting the CSV to match your template but it still fails. The error mentions a 'due_date' column format issue. What date format do you expect? MM/DD/YYYY or YYYY-MM-DD?",
+    "category": "technical",
+    "priority": "medium"
+  },
+  {
+    "id": "T042",
+    "channel": "web_form",
+    "customer_email": "analyst@bigteam.org",
+    "customer_name": "Diana Foster",
+    "subject": "Custom fields not appearing in reports",
+    "message": "We created several custom fields for our projects (Client Name, Contract Value, Region) but these fields don't show up when we generate reports. We need to include custom field data in our weekly executive dashboard. Is this a known limitation? The reporting docs say custom fields should be supported. We're on the Business plan.",
+    "category": "technical",
+    "priority": "medium"
+  },
+  {
+    "id": "T043",
+    "channel": "web_form",
+    "customer_email": "manager@consulting.com",
+    "customer_name": "Steve Park",
+    "subject": "Reporting dashboard - need burndown charts",
+    "message": "Is there a burndown chart or sprint velocity report available in the Business plan? We use your platform for agile sprints and our scrum master needs burndown visibility. I see some basic reports but nothing that shows work remaining over time. If this isn't available, is it on the roadmap? We'd also love cumulative flow diagrams.",
+    "category": "feedback",
+    "priority": "medium"
+  },
+  {
+    "id": "T044",
+    "channel": "web_form",
+    "customer_email": "admin@creative.agency",
+    "customer_name": "Jessica Lee",
+    "subject": "File attachment size limit - can we increase?",
+    "message": "Our design team needs to attach large files (video deliverables and high-res PSDs) to tasks. The current 25MB limit is too small - our files are often 100-500MB. Is there a higher attachment tier? Or can we integrate with Google Drive or Dropbox to attach links instead? We're willing to pay for increased storage if that's an option.",
     "category": "general",
+    "priority": "medium"
+  },
+  {
+    "id": "T045",
+    "channel": "web_form",
+    "customer_email": "cto@multiorg.com",
+    "customer_name": "Brian Chen",
+    "subject": "Multi-workspace management and billing consolidation",
+    "message": "We have 5 separate workspaces across our subsidiary companies and currently manage them separately. Is there a way to: (1) Have a parent account that can see all workspaces, (2) Consolidate billing into one invoice, (3) Share users across workspaces without using separate licenses? We're spending too much time on admin tasks and the separate billing is a headache.",
+    "category": "billing",
+    "priority": "medium"
+  },
+  {
+    "id": "T046",
+    "channel": "web_form",
+    "customer_email": "contracts@service.co",
+    "customer_name": "Amanda Torres",
+    "subject": "SLA terms and uptime guarantee inquiry",
+    "message": "We are in contract negotiations with our client and they require us to demonstrate a 99.9% uptime SLA from all our software tools. What is your guaranteed uptime SLA? Is there a formal SLA document we can share with our client? What is your compensation structure if you miss the SLA (service credits)? We need this for a contract signing next week.",
+    "category": "general",
+    "priority": "high"
+  },
+  {
+    "id": "T047",
+    "channel": "web_form",
+    "customer_email": "ops@affected.com",
+    "customer_name": "Kevin Murphy",
+    "subject": "Service outage - past 4 hours - urgent",
+    "message": "Your platform has been completely inaccessible for the past 4 hours (since approximately 10 AM EST). We cannot log in, the app shows a 503 error, and your status page hasn't been updated. Our entire team of 60 is blocked. We have a client delivery due at 5 PM today. Please provide an immediate update on when service will be restored and root cause information. This is a P1 incident for us.",
+    "category": "bug",
+    "priority": "high"
+  },
+  {
+    "id": "T048",
+    "channel": "web_form",
+    "customer_email": "product@feedback.co",
+    "customer_name": "Olivia Wang",
+    "subject": "Feature request - AI task suggestions",
+    "message": "I would love to see an AI-powered feature that suggests task assignments based on team member workload and past performance. Also, auto-priority suggestions based on deadline proximity and dependencies would save us a lot of manual work. Is there an AI features roadmap I can look at? We're very happy with the platform overall and this would make it a 10/10 product.",
+    "category": "feedback",
+    "priority": "low"
+  },
+  {
+    "id": "T049",
+    "channel": "web_form",
+    "customer_email": "compliance@hospital.org",
+    "customer_name": "Dr. Laura Martinez",
+    "subject": "HIPAA compliance - BAA required",
+    "message": "We are a healthcare organization looking to use your platform for care coordination tasks. Before we can proceed, we need to confirm HIPAA compliance and sign a Business Associate Agreement (BAA). Our legal team requires: (1) Signed BAA, (2) Confirmation of HIPAA-compliant data handling, (3) Encryption standards for data at rest and in transit, (4) Employee training on PHI handling. Do you offer a HIPAA-compliant tier?",
+    "category": "security",
+    "priority": "high"
+  },
+  {
+    "id": "T050",
+    "channel": "web_form",
+    "customer_email": "audit@regulated.com",
+    "customer_name": "Charles Hamilton",
+    "subject": "Audit log access - who changed what and when",
+    "message": "We are undergoing an ISO 27001 audit and the auditors are requesting evidence of access controls and change management. We need to be able to show: which users accessed which projects, all changes made to tasks (with timestamps and user attribution), login history, and permission changes. Is there an audit log feature? Can it be exported for the past 12 months? We are on the Enterprise plan.",
+    "category": "security",
+    "priority": "high"
+  },
+  {
+    "id": "T051",
+    "channel": "web_form",
+    "customer_email": "field@workforce.com",
+    "customer_name": "Sandra Bell",
+    "subject": "Mobile app offline mode - field workers need it",
+    "message": "Our field workers often operate in areas without internet connectivity (construction sites, remote locations). They need to be able to view and update tasks while offline and have them sync automatically when they reconnect. Does your mobile app support offline mode? If not, is this planned? This is a critical requirement for our use case and we would pay premium for this feature.",
+    "category": "feedback",
+    "priority": "medium"
+  },
+  {
+    "id": "T052",
+    "channel": "web_form",
+    "customer_email": "procurement@largecorp.com",
+    "customer_name": "Michael Zhang",
+    "subject": "Pricing inquiry for 500 users - enterprise plan",
+    "message": "We are a Fortune 500 company evaluating project management solutions. We need pricing for 500 users with the following requirements: SAML SSO, custom onboarding, dedicated customer success manager, 99.9% SLA, data residency in US, and quarterly business reviews. What is your enterprise pricing model - per user per month or flat rate? Do you offer nonprofit or volume discounts? Please have an account executive contact me.",
+    "category": "billing",
     "priority": "high"
   }
 ]

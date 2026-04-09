@@ -241,3 +241,90 @@ async def daily_sentiment_report(report_date: str = None):
     except Exception as e:
         logger.error("daily sentiment report failed", error=str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+# ---------------------------------------------------------------------------
+# Prometheus Metrics
+# ---------------------------------------------------------------------------
+
+@app.get("/metrics", tags=["ops"], include_in_schema=False)
+async def prometheus_metrics():
+    """Prometheus metrics endpoint for monitoring."""
+    from fastapi.responses import PlainTextResponse
+    import time
+
+    try:
+        from production.database import get_db_pool
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            # Message counts by channel and direction
+            msg_rows = await conn.fetch("""
+                SELECT channel, direction, COUNT(*) as count
+                FROM messages
+                WHERE created_at >= NOW() - INTERVAL '24 hours'
+                GROUP BY channel, direction
+            """)
+
+            # Ticket counts by status and channel
+            ticket_rows = await conn.fetch("""
+                SELECT source_channel, status, COUNT(*) as count
+                FROM tickets
+                GROUP BY source_channel, status
+            """)
+
+            # Avg latency by channel
+            latency_rows = await conn.fetch("""
+                SELECT channel, AVG(latency_ms) as avg_latency, COUNT(*) as count
+                FROM messages
+                WHERE latency_ms IS NOT NULL
+                  AND created_at >= NOW() - INTERVAL '24 hours'
+                GROUP BY channel
+            """)
+
+            # Escalation counts
+            escalation_rows = await conn.fetch("""
+                SELECT category as reason, COUNT(*) as count
+                FROM tickets
+                WHERE status = 'escalated'
+                GROUP BY category
+            """)
+
+        lines = [
+            "# HELP fte_messages_total Total messages processed by channel and direction",
+            "# TYPE fte_messages_total counter",
+        ]
+        for r in msg_rows:
+            lines.append(f'fte_messages_total{{channel="{r["channel"]}",direction="{r["direction"]}"}} {r["count"]}')
+
+        lines += [
+            "# HELP fte_tickets_total Total tickets by status and channel",
+            "# TYPE fte_tickets_total counter",
+        ]
+        for r in ticket_rows:
+            lines.append(f'fte_tickets_total{{channel="{r["source_channel"]}",status="{r["status"]}"}} {r["count"]}')
+
+        lines += [
+            "# HELP fte_response_latency_ms Average response latency in milliseconds by channel",
+            "# TYPE fte_response_latency_ms gauge",
+        ]
+        for r in latency_rows:
+            if r["avg_latency"]:
+                lines.append(f'fte_response_latency_ms{{channel="{r["channel"]}"}} {float(r["avg_latency"]):.2f}')
+
+        lines += [
+            "# HELP fte_escalations_total Total escalations by reason",
+            "# TYPE fte_escalations_total counter",
+        ]
+        for r in escalation_rows:
+            lines.append(f'fte_escalations_total{{reason="{r["reason"]}"}} {r["count"]}')
+
+        lines += [
+            "# HELP fte_scrape_timestamp Unix timestamp of last scrape",
+            "# TYPE fte_scrape_timestamp gauge",
+            f"fte_scrape_timestamp {time.time():.0f}",
+        ]
+
+        return PlainTextResponse("\n".join(lines) + "\n", media_type="text/plain; version=0.0.4")
+
+    except Exception as e:
+        logger.error("metrics scrape failed", error=str(e))
+        return PlainTextResponse(f"# ERROR: {e}\n", media_type="text/plain; version=0.0.4")
